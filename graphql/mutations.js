@@ -20,4 +20,26 @@ const register = {
     },
 };
 
-module.exports = { register };
+const login = {
+    type: GraphQLString,
+    description: "Login a user and return a JWT token",
+    args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+    },
+    async resolve( parents , args) {
+        const { email, password } = args;
+        const user = await User.findOne({ email: email }).select("+password");
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const isEqual = args.password === user.password;
+        if (!isEqual) {
+            throw new Error("Password is incorrect");
+        }
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name});
+        return token;
+    },
+};
+
+module.exports = { register, login };

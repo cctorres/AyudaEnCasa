@@ -28,4 +28,5 @@ const userChema = new Schema({
     versionKey: false,
 });
 
+
 module.exports = model('User', userChema);
