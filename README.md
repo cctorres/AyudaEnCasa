@@ -1,2 +1,5 @@
 # AyudaEnCasa
-Proyecto de prueba React - GraphQL - MongoDB
+
+Backend
+
+GraphQL - MongoDB
