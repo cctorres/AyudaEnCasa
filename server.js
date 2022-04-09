@@ -1,13 +1,16 @@
 const express = require('express');
-const {graphqlHTTP} = require('express-graphql');
+const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql/schema');
-const {connectDB} = require('./db/index');
+const { connectDB } = require('./db/index');
+const { authenticated } = require('./middlewares/auth');
 
 connectDB();
 const app = express();
 
+app.use(authenticated);
+
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Just a testing backend using GraphQL and MongoDB');
 });
 
 app.use('/graphql', graphqlHTTP({
