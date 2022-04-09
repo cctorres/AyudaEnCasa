@@ -1,6 +1,7 @@
 const { GraphQLString } = require("graphql");
-const { User } = require("../models");
+const { User, Post } = require("../models");
 const { createJWT } = require("../util/auth");
+const { PostType } = require("./types");
 
 const register = {
     type: GraphQLString,
@@ -42,4 +43,25 @@ const login = {
     },
 };
 
-module.exports = { register, login };
+const createPost = {
+    type: PostType,
+    description: "Create a new post",
+    args: {
+        title: { type: GraphQLString },
+        content: { type: GraphQLString },
+        city: { type: GraphQLString },
+    },
+    async resolve( parents , args) {
+
+        const newPost = new Post({
+            title: args.title,
+            content: args.content,
+            city: args.city,
+            authorId: "6250d80763c001d430d42cae",
+        })
+
+        return newPost;
+    },
+};
+
+module.exports = { register, login, createPost };

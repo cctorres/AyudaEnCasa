@@ -14,4 +14,18 @@ const UserType = new GraphQLObjectType({
     },
 });
 
-module.exports = { UserType };
+const PostType = new GraphQLObjectType({
+    name: "Post",
+    description: "Post Type",
+    fields: {
+        id: { type: GraphQLID },
+        title: { type: GraphQLString },
+        content: { type: GraphQLString },
+        city: { type: GraphQLString },
+        authorId: { type: GraphQLString },
+        createdAt: { type: GraphQLString },
+        updatedAt: { type: GraphQLString },
+    },
+});
+
+module.exports = { UserType, PostType };

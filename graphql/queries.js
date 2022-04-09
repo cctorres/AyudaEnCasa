@@ -20,6 +20,9 @@ const user = {
         }
     },
     resolve(_, args) {
+        if(!args.id) {
+            throw new Error('You must provide an id')
+        }
         return User.findById(args.id)
     }
 }
