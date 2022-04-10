@@ -14,6 +14,15 @@ const userSchema = new Schema({
             'Please add a valid email',
         ],
     },
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+        Math: [
+            /^\d{10}$/,
+            'Please add a valid phone number',
+        ],
+    },
     password: {
         type: String,
         required: true,

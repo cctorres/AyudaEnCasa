@@ -11,12 +11,13 @@ const register = {
         email: { type: GraphQLString },
         password: { type: GraphQLString },
         displayName: { type: GraphQLString },
+        phoneNumber: { type: GraphQLString },
     },
     async resolve(parents, args) {
         const { name, email, password, displayName } = args;
-        const user = new User({ name, email, password, displayName });
+        const user = new User({ name, email, password, displayName, phoneNumber });
         await user.save();
-        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name });
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name, phoneNumber: user.phoneNumber });
         return token;
     },
 };
@@ -38,7 +39,7 @@ const login = {
         if (!isEqual) {
             throw new Error("Password is incorrect");
         }
-        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name });
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name, phoneNumber: user.phoneNumber });
         return token;
     },
 };
