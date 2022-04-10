@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/cctorres/ayuda-en-casa-backend#readme",
   "dependencies": {
+    "apollo-server": "^3.6.7",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-graphql": "^0.12.0",

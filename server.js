@@ -1,22 +1,17 @@
-const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const schema = require('./graphql/schema');
-const { connectDB } = require('./db/index');
-const { authenticated } = require('./middlewares/auth');
+const { ApolloServer } = require("apollo-server");
+const connectDB = require("./db");
+const typeDefs = require("./graphql/types");
+const resolvers = require("./graphql");
+const models = require("./models");
 
 connectDB();
-const app = express();
 
-app.use(authenticated);
-
-app.get('/', (req, res) => {
-    res.send('Just a testing backend using GraphQL and MongoDB');
+const server = new ApolloServer({ 
+  typeDefs, 
+  resolvers,
+  context: {models}
 });
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: true
-}));
-
-app.listen(3000)
-console.log('Server is running on port 3000');
+server.listen({ port: 3000 }).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});
