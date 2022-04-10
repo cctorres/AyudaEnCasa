@@ -1,3 +1,4 @@
+require('dotenv').config()
 const jwt = require('jsonwebtoken');
 
 const authenticated = (req, res, next) => {
@@ -7,7 +8,7 @@ const authenticated = (req, res, next) => {
             message: 'You are not logged in'
         });
     }else{
-        const decoded = jwt.verify(token, 'secret');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.verifiedUser = decoded.user;
     }
     next();
