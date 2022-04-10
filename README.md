@@ -1,7 +1,3 @@
-# AyudaEnCasa
+# GraphQL - MongoDB
 
-Backend
-
-GraphQL - MongoDB
-
-Disclaimer: This is just a personal proyect for testing. DotEnv variables are not in use for easy development.
+Just testing a GraphQL API using MongoDBAtlas as Database
