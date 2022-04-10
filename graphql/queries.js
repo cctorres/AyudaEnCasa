@@ -35,4 +35,21 @@ const posts = {
     }
 }
 
-module.exports = { users, user, posts }
+const post = {
+    type : PostType,
+    description: 'Get a post by id',
+    args: {
+        id: {
+            type: GraphQLID,
+            description: 'Post id'
+        }
+    },
+    async resolve(_, args) {
+        if(!args.id) {
+            throw new Error('You must provide an id')
+        }
+        return await Post.findById(args.id)
+    }
+}
+
+module.exports = { users, user, posts, post }
