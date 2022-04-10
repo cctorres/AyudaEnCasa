@@ -1,4 +1,4 @@
-const { GraphQLString } = require("graphql");
+const { GraphQLString, GraphQLID } = require("graphql");
 const { User, Post } = require("../models");
 const { createJWT } = require("../util/auth");
 const { PostType } = require("./types");
@@ -48,7 +48,7 @@ const createPost = {
     description: "Create a new post",
     args: {
         title: { type: GraphQLString },
-        content: { type: GraphQLString }, 
+        content: { type: GraphQLString },
         city: { type: GraphQLString },
     },
     async resolve(parents, args, { verifiedUser }) {
@@ -63,4 +63,50 @@ const createPost = {
     },
 };
 
-module.exports = { register, login, createPost };
+const updatePost = {
+    type: PostType,
+    description: "Update a post",
+    args: {
+        id: { type: GraphQLID },
+        title: { type: GraphQLString },
+        content: { type: GraphQLString },
+        city: { type: GraphQLString },
+    },
+    async resolve(parents, args, { verifiedUser }) {
+        const post = await Post.findById(args.id);
+        if (!post) {
+            throw new Error("Post not found");
+        }
+        if (post.authorId.toString() !== verifiedUser.userId) {
+            throw new Error("You are not authorized to edit this post");
+        }
+        const updatedPost = await Post.findByIdAndUpdate(args.id, {
+            title: args.title,
+            content: args.content,
+            city: args.city,
+        }, { new: true });
+        return updatedPost;
+    },
+};
+
+const deletePost = {
+    type: PostType,
+    description: "Delete a post",
+    args: {
+        id: { type: GraphQLID },
+    },
+    async resolve(parents, args, { verifiedUser }) {
+        const post = await Post.findById(args.id);
+        if (!post) {
+            throw new Error("Post not found");
+        }
+        if (post.authorId.toString() !== verifiedUser.userId) {
+            throw new Error("You are not authorized to delete this post");
+        }
+        await Post.findByIdAndDelete(args.id);
+        return post;
+    },
+};
+
+
+module.exports = { register, login, createPost, updatePost };
