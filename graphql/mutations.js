@@ -14,7 +14,7 @@ const register = {
         phoneNumber: { type: GraphQLString },
     },
     async resolve(parents, args) {
-        const { name, email, password, displayName } = args;
+        const { name, email, password, displayName, phoneNumber } = args;
         const user = new User({ name, email, password, displayName, phoneNumber });
         await user.save();
         const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name, phoneNumber: user.phoneNumber });
@@ -39,6 +39,44 @@ const login = {
         if (!isEqual) {
             throw new Error("Password is incorrect");
         }
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name, phoneNumber: user.phoneNumber });
+        return token;
+    },
+};
+
+const updateUser = {
+    type: GraphQLString,
+    description: "Update a user and return a JWT token",
+    args: {
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        displayName: { type: GraphQLString },
+        phoneNumber: { type: GraphQLString },
+    },
+    async resolve(parents, args) {
+        const { id, name, email, password, displayName, phoneNumber } = args;
+        const user = await User.findById(id);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        if (name) {
+            user.name = name;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (password) {
+            user.password = password;
+        }
+        if (displayName) {
+            user.displayName = displayName;
+        }
+        if (phoneNumber) {
+            user.phoneNumber = phoneNumber;
+        }
+        await user.save();
         const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name, phoneNumber: user.phoneNumber });
         return token;
     },
