@@ -2,9 +2,14 @@ const jwt = require('jsonwebtoken');
 
 const authenticated = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
-    const verified = jwt.verify(token, 'secret');
-
-    console.log(verified);
+    if (!token) {
+        return res.status(401).json({
+            message: 'You are not logged in'
+        });
+    }else{
+        const decoded = jwt.verify(token, 'secret');
+        req.verifiedUser = decoded.user;
+    }
     next();
 }
 

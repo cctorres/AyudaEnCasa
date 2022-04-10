@@ -12,12 +12,12 @@ const register = {
         password: { type: GraphQLString },
         displayName: { type: GraphQLString },
     },
-    async resolve( parents , args) {
+    async resolve(parents, args) {
         const { name, email, password, displayName } = args;
         const user = new User({ name, email, password, displayName });
         await user.save();
-        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name});
-        return token; 
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name });
+        return token;
     },
 };
 
@@ -28,7 +28,7 @@ const login = {
         email: { type: GraphQLString },
         password: { type: GraphQLString },
     },
-    async resolve( parents , args) {
+    async resolve(parents, args) {
         const { email, password } = args;
         const user = await User.findOne({ email: email }).select("+password");
         if (!user) {
@@ -38,7 +38,7 @@ const login = {
         if (!isEqual) {
             throw new Error("Password is incorrect");
         }
-        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name});
+        const token = createJWT({ userId: user._id, email: user.email, displayName: user.displayName, name: user.name });
         return token;
     },
 };
@@ -48,18 +48,17 @@ const createPost = {
     description: "Create a new post",
     args: {
         title: { type: GraphQLString },
-        content: { type: GraphQLString },
+        content: { type: GraphQLString }, 
         city: { type: GraphQLString },
     },
-    async resolve( parents , args) {
-
+    async resolve(parents, args, { verifiedUser }) {
         const newPost = new Post({
             title: args.title,
             content: args.content,
             city: args.city,
-            authorId: "6250d80763c001d430d42cae",
+            authorId: verifiedUser.userId,
         })
-
+        await newPost.save();
         return newPost;
     },
 };
