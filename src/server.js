@@ -7,8 +7,6 @@ const { authenticated } = require('./middlewares/auth');
 connectDB();
 const app = express();
 
-app.use(authenticated);
-
 app.use('/', graphqlHTTP({
     schema: schema,
     graphiql: true
