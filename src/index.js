@@ -7,10 +7,9 @@ const { authenticated } = require('./middlewares/auth');
 connectDB();
 const app = express();
 
-app.use('/', graphqlHTTP({
+app.use('https://testing-graphql.vercel.app/', graphqlHTTP({
     schema: schema,
     graphiql: true
 }));
 
 app.listen(3000)
-console.log('Server is running on port 3000');
